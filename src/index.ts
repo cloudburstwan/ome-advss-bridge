@@ -55,7 +55,7 @@ app.post("/webhooks/admission", async (req, res) => {
     let urlInfo = /(.+):\/\/(.+)\/app\/(.+)/g.exec(data.request.url);
     let key = urlInfo![3].split("?")[0];
 
-    mqttClient.publish("/ome-stream-status", `${data.request.direction == "incoming" ? "UP" : "DOWN"}${key}`);
+    mqttClient.publish("/ome-stream-status", `${data.request.direction == "incoming" ? "UP" : "DOWN"}:${key}`);
 
     res.json({
         allowed: true
