@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    container_name: ome-advss-bridge
+    hostname: ome-advss-bridge
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      MQTT_DOMAIN:
+      MQTT_USERNAME:
+      MQTT_PASSWORD:
+      OME_DOMAIN:
+      OME_SIGNED_POLICY_SIGNATURE_KEY:
+      OME_WEBHOOK_SIGNATURE_KEY:
