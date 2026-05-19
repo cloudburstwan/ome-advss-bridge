@@ -55,6 +55,8 @@ app.post("/webhooks/admission", async (req, res) => {
     mqttClient.publish("/ome-stream-status", `${data.request.direction == "incoming" ? "UP" : "DOWN"}${key}`);
 });
 
+app.listen(80);
+
 interface SignedPolicyCreatorRequest {
     key: string;
     startAt: string;
