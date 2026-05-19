@@ -44,7 +44,10 @@ app.post("/webhooks/admission", async (req, res) => {
         .digest('base64url');
 
     if (hmacVerificationSignature != req.get("X-Ome-Signature")) {
-        res.status(403).send("OME Signature verification failed");
+        res.json({
+            allowed: false,
+            reason: "HMAC_VERIFICATION_FAILED: Failed to verify HMAC signature, request is denied",
+        });
         return;
     }
 
@@ -53,6 +56,10 @@ app.post("/webhooks/admission", async (req, res) => {
     let key = urlInfo![3].split("?")[0];
 
     mqttClient.publish("/ome-stream-status", `${data.request.direction == "incoming" ? "UP" : "DOWN"}${key}`);
+
+    res.json({
+        allowed: true
+    });
 });
 
 app.listen(80);
