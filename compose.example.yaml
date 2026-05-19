@@ -7,6 +7,7 @@ services:
     ports:
       - "80:80"
     environment:
+      API_KEY:
       MQTT_DOMAIN:
       MQTT_USERNAME:
       MQTT_PASSWORD:
