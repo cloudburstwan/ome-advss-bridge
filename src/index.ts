@@ -60,7 +60,13 @@ app.post("/webhooks/admission", async (req, res) => {
     if (data.request.status == "opening") {
         activeStreamKeys.push(key);
     } else {
-        if (!activeStreamKeys.includes(key)) return;
+        if (!activeStreamKeys.includes(key)) {
+            res.json({
+                allowed: false,
+                reason: "STREAM_NOT_FOUND: Stream not found",
+            });
+            return;
+        }
         activeStreamKeys = activeStreamKeys.filter(k => k != key);
     }
 
