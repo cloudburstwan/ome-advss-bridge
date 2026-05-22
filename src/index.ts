@@ -7,6 +7,8 @@ const mqttClient = mqtt.connect(`mqtt://${process.env.MQTT_DOMAIN}:1883`, {
     password: process.env.MQTT_PASSWORD
 });
 
+let activeStreamKeys: string[] = [];
+
 const app = express();
 app.use(express.json());
 
@@ -54,6 +56,13 @@ app.post("/webhooks/admission", async (req, res) => {
     let data = req.body as AdmissionWebhookRequest;
     let urlInfo = /(.+):\/\/(.+)\/app\/(.+)/g.exec(data.request.url);
     let key = urlInfo![3].split("?")[0];
+
+    if (data.request.status == "opening") {
+        activeStreamKeys.push(key);
+    } else {
+        if (!activeStreamKeys.includes(key)) return;
+        activeStreamKeys = activeStreamKeys.filter(k => k != key);
+    }
 
     mqttClient.publish("/ome-stream-status", `${data.request.status == "opening" ? "UP" : "DOWN"}:${key}`);
 
